@@ -8,9 +8,6 @@ GO
 
 -- ---------------------------------------------------------
 -- 1. Clientes con factura en el año 2021
--- NOTA: se quito el DISTINCT porque nombre/apellido son tipo
--- "text" (heredado) y no se pueden comparar; ademas era
--- redundante ya que cada id_factura es unico por fila.
 -- ---------------------------------------------------------
 SELECT c.id_cliente, c.nombre, c.apellido, f.id_factura, f.fecha
 FROM cliente c
@@ -90,8 +87,6 @@ GO
 
 -- ---------------------------------------------------------
 -- 5. Producto mas vendido (por cantidad total en detalle)
--- NOTA: se agrupa por id_producto (int) en una subconsulta,
--- ya que p.nombre es tipo "text" y no admite GROUP BY.
 -- ---------------------------------------------------------
 SELECT TOP 1 p.id_producto, p.nombre, v.TotalVendido
 FROM (
@@ -122,8 +117,6 @@ GO
 
 -- ---------------------------------------------------------
 -- 8. Clientes ordenados alfabeticamente
--- NOTA: se usa CAST porque nombre/apellido son tipo "text"
--- y ese tipo no admite ORDER BY sin convertirlo antes.
 -- ---------------------------------------------------------
 SELECT id_cliente, CAST(nombre AS NVARCHAR(200)) AS nombre, CAST(apellido AS NVARCHAR(200)) AS apellido
 FROM cliente
@@ -132,10 +125,6 @@ GO
 
 -- ---------------------------------------------------------
 -- 9. Productos por categoria
--- Notas:
--- 1) categoria.nombre es tipo "text": el operador "=" no
---    esta permitido sobre ese tipo, se usa LIKE en su lugar.
--- 2) en la tabla categoria el registro 6 se llama 'Zapato' (singular)
 -- ---------------------------------------------------------
 
 -- 9.1 Falda
@@ -192,9 +181,6 @@ GO
 
 -- ---------------------------------------------------------
 -- 12. Clientes mayores de 30 anios
--- La edad se calcula restando 1 anio cuando el cumpleanios
--- todavia no ha ocurrido en el anio en curso (evita el
--- error comun de solo restar YEAR(GETDATE()) - YEAR(fec_nac))
 -- ---------------------------------------------------------
 SELECT id_cliente, nombre, apellido, fec_nac,
     DATEDIFF(YEAR, fec_nac, GETDATE())
